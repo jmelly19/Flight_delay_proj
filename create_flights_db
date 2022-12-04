@@ -1,0 +1,70 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema flight_delays
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema flight_delays
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `flight_delays` DEFAULT CHARACTER SET utf8 ;
+USE `flight_delays` ;
+
+-- -----------------------------------------------------
+-- Table `flight_delays`.`carrier`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `flight_delays`.`carrier` (
+  `idcarrier` INT NOT NULL,
+  `carrier_name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`idcarrier`),
+  UNIQUE INDEX `idcarrier_UNIQUE` (`idcarrier` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `flight_delays`.`airport`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `flight_delays`.`airport` (
+  `idairport` INT NOT NULL,
+  `airport_name` VARCHAR(200) NOT NULL,
+  `airport_abb` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idairport`),
+  UNIQUE INDEX `idairport_UNIQUE` (`idairport` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `flight_delays`.`flights`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `flight_delays`.`flights` (
+  `idflights` INT NOT NULL,
+  `flights_arrived` INT NULL,
+  `flights_delayed` INT NULL,
+  `flight_month` INT NOT NULL,
+  `flight_year` INT NOT NULL,
+  `carrier_idcarrier` INT NOT NULL,
+  `airport_idairport` INT NOT NULL,
+  PRIMARY KEY (`idflights`, `carrier_idcarrier`, `airport_idairport`),
+  UNIQUE INDEX `idflights_UNIQUE` (`idflights` ASC) VISIBLE,
+  INDEX `fk_flights_carrier_idx` (`carrier_idcarrier` ASC) VISIBLE,
+  INDEX `fk_flights_airport1_idx` (`airport_idairport` ASC) VISIBLE,
+  CONSTRAINT `fk_flights_carrier`
+    FOREIGN KEY (`carrier_idcarrier`)
+    REFERENCES `flight_delays`.`carrier` (`idcarrier`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_flights_airport1`
+    FOREIGN KEY (`airport_idairport`)
+    REFERENCES `flight_delays`.`airport` (`idairport`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
